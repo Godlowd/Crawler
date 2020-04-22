@@ -6,14 +6,43 @@
 # @Time  : 2020/4/16 15:48
 # @Author: Huangshaofei
 # @File  : 第一个爬虫.py
+import time
 from functools import partial
 from multiprocessing import Pool
-from filter.Compare import *
 import multiprocessing
-from config.URL import *
 
+from requests import get, Timeout
+
+from config.URL import *
+from config.Setting import *
+from crawl import Requester
 """define the number of the process"""
-process_num = 1
+process_num = 6
+
+
+def filtrate(category_item: list):
+    for each in category_item:
+        compare(each)
+        """if we can not make profit by selling it neither on steam nor buff, remove it from the list"""
+        if each.sellatsteam is not True and each.sellatbuff is not True:
+            category_item.remove(each)
+    category_item.sort(key=lambda Item: Item.roi)
+    return category_item
+
+
+def compare(Item):
+    roi = calculate(Item.price, Item.steam_predict_price)
+    Item.roi = roi
+    if roi > ROI_STEAM:
+        Item.sellatsteam = True
+    elif roi < ROI_BUFF:
+        Item.sellatbuff = True
+
+
+def calculate(price_in_buff, price_in_steam):
+    """calculate the ROI if we buy a item at buff and sell it at steam"""
+    ROI = (price_in_steam * 0.85 - price_in_buff) / price_in_buff
+    return ROI
 
 
 def get_json(url, category_item):
@@ -33,6 +62,8 @@ def get_json(url, category_item):
                     # category_item_add(csgo_item)
     except Timeout:
         print("timeout for {}. Try again.".format(url))
+    except ValueError:
+        print(url)
 
 
 def craw_by_price(category=None):
@@ -45,10 +76,11 @@ def craw_by_price(category=None):
         total_page = root_json['data']['total_page']
         total_count = root_json['data']['total_count']
         print("所有物品数: ", total_count)
-        #page_url = goods_section_page_url(category, )
-        #print(page_url)
+        # page_url = goods_section_page_url(category, )
+        # print(page_url)
         """get all the urls to iterate"""
-        all_pages = all_page_url()
+        print(total_page)
+        all_pages = all_page_url(total_page)
 
         """calculate the time of the process"""
         starttime = time.time()
@@ -68,10 +100,14 @@ if __name__ == '__main__':
     craw_by_price()
     print("We have crawed the data already")
     for each_item in item:
-        print(each_item.name)
-    # sublist = filtrate(item)
-    # """filtrate the item list and find the useful info"""
-    # """output the outcome"""
-    # for each_item in sublist:
-    #     print("Name: ", each_item.name, end=" ")
-    #     print("roi: ", each_item.roi)
+        print(each_item.name, each_item.price)
+    category = []
+    for each_item in item:
+        category.append(each_item)
+
+    sublist = filtrate(category)
+    """filtrate the item list and find the useful info"""
+    """output the outcome"""
+    for each_item in sublist:
+        print("Name: ", each_item.name, end=" ")
+        print("roi: ", each_item.roi)
