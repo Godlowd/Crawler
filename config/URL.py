@@ -2,9 +2,8 @@
 # @Time  : 2020/4/18 9:11
 # @Author: Huangshaofei
 # @File  : URL.py
-from config.Setting import MAX_PRICE,MIN_PRICE
+from config.Setting import MAX_PRICE, MIN_PRICE
 import sys
-
 
 BUFF_ROOT = 'https://buff.163.com/'
 BUFF_GOODS = BUFF_ROOT + 'api/market/goods?'
@@ -47,12 +46,19 @@ def goods_section_root_url(category):
     return base
 
 
-def goods_section_page_url(category, total_page):
+def goods_section_page_url(category, page_num):
     """return the URL and sort them with the price descendant"""
-    base = [BUFF_GOODS + 'game=csgo&page_num={}&sort_by=price.desc&min_price={}&max_price={}'.format(str(i), MIN_PRICE, MAX_PRICE)
-            for i in range(1, total_page)]
+    base = BUFF_GOODS + 'game=csgo&page_num={}&sort_by=price.desc&min_price={}&max_price={}' \
+        .format(page_num, MIN_PRICE, MAX_PRICE)
 
-    # if category is not None:
-    #     base += '&category={}'.format(category)
+    if category is not None:
+        base += '&category={}'.format(category)
 
+    return base
+
+
+def all_page_url(total_page: int = 2):
+    base = [BUFF_GOODS + 'game=csgo&page_num={}&sort_by=price.desc&min_price={}&max_price={}'.format(str(i), MIN_PRICE,
+                                                                                                     MAX_PRICE) for i in
+            range(1, total_page)]
     return base

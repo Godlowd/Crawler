@@ -7,10 +7,12 @@ from crawl import Requester
 from config.URL import *
 from multiprocessing import Pool
 import time
-import config.Setting
+from requests import *
+
+from multiprocessing import Manager
 
 
-def craw_by_price(category_item, category=None):
+def craw_by_price(item, category=None):
     """get the root's url and json"""
     root_url = goods_section_root_url(category)
     root_json = Requester.get_root_json(root_url)
@@ -27,6 +29,26 @@ def craw_by_price(category_item, category=None):
         pool.map(Requester.get_json, page_url)
         pool.close()
         pool.join()
-        #print(len(config.Setting.category_item))
+        #print(len(category_item))
         endtime = time.time()
         print('总共耗时: ', float(endtime - starttime))
+
+
+# def get_json(url):
+#     time.sleep(1)
+#     try:
+#         page_json = get(url, headers=Requester.headers, cookies=Requester.cookies, timeout=5).json()
+#         print(category_item)
+#         if page_json is not None:
+#             """items on this page"""
+#             items_json = page_json['data']['items']
+#             for item in items_json:
+#                 """get item"""
+#                 csgo_item = Requester.collect_item(item)
+#                 if csgo_item is not None:
+#                     category_item.append(csgo_item)
+#
+#                     # config.Setting.category_item.append(csgo_item)
+#                     # category_item_add(csgo_item)
+#     except Timeout:
+#         print("timeout for {}. Try again.".format(url))
