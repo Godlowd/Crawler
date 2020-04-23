@@ -9,7 +9,6 @@ import os
 from config.Setting import COOKIE
 from config.Item import *
 from functools import partial
-from config.Setting import category_item_add
 import config.Setting
 
 FATHER_PATH = os.path.abspath(os.path.dirname(os.getcwd()))

@@ -10,9 +10,6 @@ from config.Item import *
 
 """the list of the category item"""
 
-
-
-
 config = configparser.RawConfigParser()
 # config
 CONFIG_DIR = 'config'
@@ -38,10 +35,7 @@ MIN_PRICE = config_filter['min_price']
 ROI_STEAM = config.getfloat('RATIO', 'ROI_STEAM')
 ROI_BUFF = config.getfloat('RATIO', 'ROI_BUFF')
 
+# PROCESS_NUM
+PROCESS_NUM = config.getint('PROCESS', 'PROCESS_NUM')
 
-def category_item_add(item: Item):
-    category_item.append(item)
 
-
-def category_item_remove(item: Item):
-    category_item.remove(item)

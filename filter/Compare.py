@@ -4,15 +4,18 @@
 # @File  : Compare.py
 from crawl.crawler_buff import *
 from config import Item
-from config.Setting import category_item_remove, ROI_BUFF, ROI_STEAM
+from config.Setting import ROI_BUFF, ROI_STEAM
 
 
 def filtrate(category_item: list):
-    for each_item in category_item:
-        compare(each_item)
+    for each in category_item:
+        compare(each)
         """if we can not make profit by selling it neither on steam nor buff, remove it from the list"""
-        if each_item.sellatsteam is not True and each_item.sellatbuff is not True:
-            category_item_remove(each_item)
+        if each.sellatsteam is not True and each.sellatbuff is not True:
+            category_item.remove(each)
+        elif each.sell_num < 10:
+            category_item.remove(each)
+        #elif each.
     category_item.sort(key=lambda Item: Item.roi)
     return category_item
 
