@@ -15,7 +15,8 @@ def filtrate(category_item: list):
             category_item.remove(each)
         elif each.sell_num < 10:
             category_item.remove(each)
-        #elif each.
+        elif len(each.history_prices) < 10:
+            category_item.remove(each)
     category_item.sort(key=lambda Item: Item.roi)
     return category_item
 

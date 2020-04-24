@@ -25,8 +25,27 @@ def get_json(url, category_item):
                 csgo_item = Requester.collect_item(item)
                 if csgo_item is not None:
                     category_item.append(csgo_item)
-                    # config.Setting.category_item.append(csgo_item)
-                    # category_item_add(csgo_item)
+                    print(len(category_item))
+                """get the history price of the item"""
+                history_prices = []
+                sold_time = []
+                item_id = csgo_item.id
+                steam_price_url = steam_price_history_url(item_id)
+                history_price_json = Requester.get_root_json(steam_price_url)
+                if history_price_json is not None and history_price_json['code'] == "OK":
+                    days = history_price_json['data']['days']
+                    raw_price_history = history_price_json['data']['price_history']
+                    for pair in raw_price_history:
+                        if len(pair) == 2:
+                            sold_time.append(pair[0]/1000)
+                            history_prices.append(float(pair[1]))
+                    # set history price if exist
+                    if len(history_prices) != 0:
+                        csgo_item.set_history_prices(history_prices, days)
+
+                # elif history_price_json is not None:
+                #     print(history_price_json['code'])
+
     except Timeout:
         print("timeout for {}. Try again.".format(url))
     except ValueError:
@@ -53,4 +72,4 @@ def craw_by_price(item, category=None):
         p.close()
         p.join()
         endtime = time.time()
-        print('总共耗时: ', float(endtime - starttime))
+        print('爬取现在价格总共耗时: ', float(endtime - starttime))

@@ -13,7 +13,7 @@ import multiprocessing
 from requests import get, Timeout
 from config.URL import *
 from config.Setting import *
-from crawl import Requester
+from crawl import Requester, craw_history_price
 from filter import Compare
 import crawl.crawler_buff
 
@@ -40,16 +40,20 @@ def get_json(url, category_item):
 
 if __name__ == '__main__':
     """create a list can be shared by different process"""
+    starttime = time.time()
     item = multiprocessing.Manager().list()
     crawl.crawler_buff.craw_by_price(item)
     print("We have crawed the data already")
     category = []
+    #craw_history_price.craw_history_price(item)
     for each_item in item:
         category.append(each_item)
-
     sublist = Compare.filtrate(category)
     """filtrate the item list and find the useful info"""
     """output the outcome"""
     for each_item in sublist:
         print("Name: ", each_item.name, end=" ")
         print("roi: ", each_item.roi)
+
+    endtime = time.time()
+    print("程序总共耗时: ", float(endtime - starttime))

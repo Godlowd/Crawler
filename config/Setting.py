@@ -15,6 +15,8 @@ config = configparser.RawConfigParser()
 CONFIG_DIR = 'config'
 CONFIG_FILE_NAME = 'config.ini'
 CONFIG_PATH = os.path.join(os.getcwd(), CONFIG_DIR, CONFIG_FILE_NAME)
+
+
 """read the config file"""
 try:
     config.read(CONFIG_PATH, encoding='utf-8')
@@ -22,8 +24,6 @@ except IOError:
     print('File {} does not exist. Exit!'.format(CONFIG_PATH))
     exit(1)
 
-# cookie
-COOKIE = config['BASIC']['cookie']
 
 # price
 config_filter = config['FILTER']
@@ -38,4 +38,5 @@ ROI_BUFF = config.getfloat('RATIO', 'ROI_BUFF')
 # PROCESS_NUM
 PROCESS_NUM = config.getint('PROCESS', 'PROCESS_NUM')
 
-
+# cookie
+COOKIE = config['BASIC']['cookie']
