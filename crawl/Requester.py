@@ -32,7 +32,7 @@ for line in COOKIE.split(';'):
     cookies[k] = v
 
 
-def collect_item(item):
+def collect_item(item, history_prices, days):
     buff_id = item['id']
     name = item['name']
     min_price = item['sell_min_price']
@@ -42,7 +42,7 @@ def collect_item(item):
     buy_max_price = item['buy_max_price']
 
     # restrict price of a item
-    return Item(buff_id, name, min_price, sell_num, steam_url, steam_predict_price, buy_max_price)
+    return Item(buff_id, name, min_price, sell_num, steam_url, steam_predict_price, buy_max_price, history_prices, days)
 
 
 def get_json(url,category_item=None):

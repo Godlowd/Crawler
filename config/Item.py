@@ -8,7 +8,7 @@ import numpy as np
 class Item:
     roi = float(0)
 
-    def __init__(self, buff_id, name, price, sell_num, steam_url, steam_predict_price, buy_max_price, roi=0.00000, sellatsteam=False,
+    def __init__(self, buff_id, name, price, sell_num, steam_url, steam_predict_price, buy_max_price, history_prices, days, roi=0.00000, sellatsteam=False,
                  sellatbuff=False):
 
         self.roi = float(roi)
@@ -33,6 +33,7 @@ class Item:
         self.average_sold_price = 0
         self.average_sold_price_after_tax = 0
 
+        self.set_history_prices(history_prices, days)
     def set_history_prices(self, prices, days):
         self.history_prices = prices
         self.history_sold = len(prices)

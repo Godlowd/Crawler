@@ -45,10 +45,11 @@ if __name__ == '__main__':
     crawl.crawler_buff.craw_by_price(item)
     print("We have crawed the data already")
     category = []
-    #craw_history_price.craw_history_price(item)
+    # craw_history_price.craw_history_price(item)
     for each_item in item:
         category.append(each_item)
-    sublist = Compare.filtrate(category)
+    sublist = list(filter(Compare.filtrate, category))
+    sublist.sort(key=lambda Item: Item.roi)
     """filtrate the item list and find the useful info"""
     """output the outcome"""
     for each_item in sublist:
